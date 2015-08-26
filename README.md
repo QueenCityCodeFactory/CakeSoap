@@ -17,8 +17,6 @@ You can also add `"queencitycodefactory/cakesoap" : "dev-master"` to `require` s
 
 ## Usage
 
-In your app's `config/bootstrap.php` add: `Plugin::load('QueenCityCodeFactory/CakeSoap');`
-
 Include the CakeSoap library files:
 ```php
     use QueenCityCodeFactory\CakeSoap;
