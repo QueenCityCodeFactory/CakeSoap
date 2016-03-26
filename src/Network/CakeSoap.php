@@ -205,7 +205,7 @@ class CakeSoap
      */
     public function showError($result = null)
     {
-        if (Configure::read('debug') > 0) {
+        if (Configure::read('debug') === true) {
             if ($this->error) {
                 trigger_error('<span style = "color:Red;text-align:left"><b>SOAP Error:</b> ' . $this->error . '</span>', E_USER_WARNING);
             }
