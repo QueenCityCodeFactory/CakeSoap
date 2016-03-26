@@ -21,6 +21,7 @@ use Cake\Log\LogTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use CakeSoap\Network\SoapClient;
+use SoapFault;
 
 /**
  * CakePHP SoapClient Wrapper
@@ -205,15 +206,15 @@ class CakeSoap
      */
     public function showError($result = null)
     {
+        $this->log($this->client->__getLastRequest());
+
         if (Configure::read('debug') === true) {
             if ($this->error) {
-                trigger_error('<span style = "color:Red;text-align:left"><b>SOAP Error:</b> ' . $this->error . '</span>', E_USER_WARNING);
+                trigger_error('<span style="color:Red;text-align:left"><b>SOAP Error:</b> ' . $this->error . '</span>', E_USER_WARNING);
             }
             if (!empty($result)) {
                 echo sprintf("<p><b>Result:</b> %s </p>", $result);
             }
         }
-
-        $this->log($this->client->__getLastRequest());
     }
 }
