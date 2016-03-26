@@ -13,13 +13,17 @@ The recommended way to install composer packages is:
 composer require queencitycodefactory/cakesoap
 ```
 
-You can also add `"queencitycodefactory/cakesoap" : "dev-master"` to `require` section in your application's `composer.json`.
+You can also add `"queencitycodefactory/cakesoap" : "dev-master"` to `require` section in your application's `composer.json`. Use for latest updates.
+
+-- or --
+
+You can also add `"queencitycodefactory/cakesoap" : "~3.2"` to `require` section in your application's `composer.json`. Stable Release.
 
 ## Usage
 
 Include the CakeSoap library files:
 ```php
-    use QueenCityCodeFactory\CakeSoap;
+    use CakeSoap\Network\CakeSoap;
 ```
 
 ### Sample Request

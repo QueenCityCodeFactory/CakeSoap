@@ -13,14 +13,14 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace QueenCityCodeFactory\Network;
+namespace CakeSoap\Network;
 
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use QueenCityCodeFactory\Network\SoapClient;
+use CakeSoap\Network\SoapClient;
 
 /**
  * CakePHP SoapClient Wrapper
