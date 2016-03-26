@@ -86,7 +86,7 @@ class CakeSoap
         }
 
         $opts = [
-            'http'=> [
+            'http' => [
                 'user_agent' => $this->config('userAgent')
             ]
         ];
@@ -114,14 +114,14 @@ class CakeSoap
     /**
      * Connects to the SOAP server using the WSDL in the configuration
      *
-     * @return boolean True on success, false on failure
+     * @return bool True on success, false on failure
      */
     public function connect()
     {
         $options = $this->_parseConfig();
         try {
             $this->client = new SoapClient($this->config('wsdl'), $options);
-        } catch(SoapFault $fault) {
+        } catch (SoapFault $fault) {
             $this->error = $fault->faultstring;
             $this->showError();
         }
@@ -134,7 +134,7 @@ class CakeSoap
     /**
      * Sets the SoapClient instance to null
      *
-     * @return boolean True
+     * @return bool True
      */
     public function close()
     {
@@ -201,7 +201,7 @@ class CakeSoap
      * Shows an error message and outputs the SOAP result if passed
      *
      * @param string $result A SOAP result
-     * @return string The last SOAP response
+     * @return void
      */
     public function showError($result = null)
     {

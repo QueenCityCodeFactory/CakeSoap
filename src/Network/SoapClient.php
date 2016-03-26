@@ -15,6 +15,8 @@
 
 namespace QueenCityCodeFactory\Network;
 
+use Cake\Core\Configure;
+use Cake\Log\LogTrait;
 use SoapClient as Client;
 
 /**
@@ -22,12 +24,25 @@ use SoapClient as Client;
  */
 class SoapClient extends Client
 {
-    public function __doRequest($request, $location, $action, $version, $one_way = 0) {
-        debug($request);
-        debug($location);
-        debug($action);
-        debug($version);
-        exit;
-        return parent::__doRequest($request, $location, $action, $version, $one_way);
+
+    /**
+     * Performs a SOAP request
+     *
+     * @param string $request The XML SOAP request.
+     * @param string $location The URL to request.
+     * @param string $action The SOAP action.
+     * @param int  $version The SOAP version.
+     * @param int $oneWay If set to 1, this method returns nothing. Use this where a response is not expected.
+     * @return string The XML SOAP response.
+     */
+    public function __doRequest($request, $location, $action, $version, $oneWay = 0)
+    {
+        if (Configure::read('debug') === true) {
+            $this->log($request);
+            $this->log($location);
+            $this->log($action);
+            $this->log($version);
+        }
+        return parent::__doRequest($request, $location, $action, $version, $oneWay);
     }
 }
