@@ -13,22 +13,23 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace QueenCityCodeFactory\CakeSoap;
+namespace QueenCityCodeFactory\Network;
 
-use \SoapClient;
-use Cake\Core\InstanceConfigTrait;
 use Cake\Core\Configure;
+use Cake\Core\InstanceConfigTrait;
+use Cake\Log\LogTrait;
 use Cake\Network\Request;
 use Cake\Network\Response;
+use QueenCityCodeFactory\Network\SoapClient;
 
 /**
- * Soap
- *
+ * CakePHP SoapClient Wrapper
  */
 class CakeSoap
 {
 
     use InstanceConfigTrait;
+    use LogTrait;
 
     /**
      * SoapClient instance
@@ -56,7 +57,8 @@ class CakeSoap
         'uri' => '',
         'login' => '',
         'password' => '',
-        'authentication' => 'SOAP_AUTHENTICATION_`IC'
+        'authentication' => 'SOAP_AUTHENTICATION_`IC',
+        'trace' => false
     ];
 
     /**
@@ -90,7 +92,11 @@ class CakeSoap
         ];
 
         $context = stream_context_create($opts);
-        $options = ['trace' => Configure::read('debug') > 0, 'stream_context' => $context, 'cache_wsdl' => WSDL_CACHE_NONE];
+        $options = [
+            'trace' => Configure::read('debug'),
+            'stream_context' => $context,
+            'cache_wsdl' => WSDL_CACHE_NONE
+        ];
         if (!empty($this->config('location'))) {
             $options['location'] = $this->config('location');
         }
@@ -108,23 +114,18 @@ class CakeSoap
     /**
      * Connects to the SOAP server using the WSDL in the configuration
      *
-     * @param array $config An array defining the new configuration settings
      * @return boolean True on success, false on failure
      */
     public function connect()
     {
         $options = $this->_parseConfig();
-        try
-        {
+        try {
             $this->client = new SoapClient($this->config('wsdl'), $options);
-        } catch(SoapFault $fault)
-        {
+        } catch(SoapFault $fault) {
             $this->error = $fault->faultstring;
             $this->showError();
         }
-
-        if ($this->client)
-        {
+        if ($this->client) {
             $this->connected = true;
         }
         return $this->connected;
@@ -147,7 +148,7 @@ class CakeSoap
      *
      * @return array List of SOAP methods
      */
-    public function listSources($data = null)
+    public function listSources()
     {
         return $this->client->__getFunctions();
     }
@@ -155,21 +156,20 @@ class CakeSoap
     /**
      * Query the SOAP server with the given method and parameters
      *
+     * @param string $action The WSDL Action
+     * @param array $data The data array
      * @return mixed Returns the result on success, false on failure
      */
     public function sendRequest($action, $data)
     {
         $this->error = false;
-        if (!$this->connected)
-        {
+        if (!$this->connected) {
             $this->connect();
         }
 
-        try
-        {
+        try {
             $result = $this->client->__soapCall($action, $data);
-        } catch (SoapFault $fault)
-        {
+        } catch (SoapFault $fault) {
             $this->error = $fault->faultstring;
             $this->showError();
             return false;
@@ -205,16 +205,15 @@ class CakeSoap
      */
     public function showError($result = null)
     {
-        if (Configure::read('debug') > 0)
-        {
-            if ($this->error)
-            {
+        if (Configure::read('debug') > 0) {
+            if ($this->error) {
                 trigger_error('<span style = "color:Red;text-align:left"><b>SOAP Error:</b> ' . $this->error . '</span>', E_USER_WARNING);
             }
-            if (!empty($result))
-            {
+            if (!empty($result)) {
                 echo sprintf("<p><b>Result:</b> %s </p>", $result);
             }
         }
+
+        $this->log($this->client->__getLastRequest());
     }
 }

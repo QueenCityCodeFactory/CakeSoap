@@ -20,20 +20,22 @@
         "issues":"https://github.com/QueenCityCodeFactory/CakeSoap/issues"
     },
     "require": {
-        "php": ">=5.4.16",
-        "cakephp/cakephp": "~3.0"
+        "php": ">=5.5.9",
+        "cakephp/cakephp": ">=3.2.0"
     },
     "require-dev": {
+        "cakephp/cakephp-codesniffer": "dev-master",
         "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
-            "QueenCityCodeFactory\\CakeSoap\\": "src"
+            "CakeSoap\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "QueenCityCodeFactory\\CakeSoap\\Test\\": "tests"
+            "CakeSoap\\Test\\": "tests"
         }
-    }
+    },
+    "minimum-stability": "beta"
 }
