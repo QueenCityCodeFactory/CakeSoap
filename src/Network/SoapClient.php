@@ -17,6 +17,7 @@ namespace CakeSoap\Network;
 
 use Cake\Core\Configure;
 use Cake\Log\LogTrait;
+use Psr\Log\LogLevel;
 use SoapClient as Client;
 
 /**
@@ -40,10 +41,10 @@ class SoapClient extends Client
     public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
         if (Configure::read('debug') === true) {
-            $this->log($request);
-            $this->log($location);
-            $this->log($action);
-            $this->log($version);
+            $this->log($request, LogLevel::INFO);
+            $this->log($location, LogLevel::INFO);
+            $this->log($action, LogLevel::INFO);
+            $this->log($version, LogLevel::INFO);
         }
         return parent::__doRequest($request, $location, $action, $version, $oneWay);
     }
@@ -61,11 +62,11 @@ class SoapClient extends Client
     public function __soapCall($functionName, $arguments, $options = null, $inputHeaders = null, &$outputHeaders = null)
     {
         if (Configure::read('debug') === true) {
-            $this->log($functionName);
-            $this->log($arguments);
-            $this->log($options);
-            $this->log($inputHeaders);
-            $this->log($outputHeaders);
+            $this->log($functionName, LogLevel::INFO);
+            $this->log($arguments, LogLevel::INFO);
+            $this->log($options, LogLevel::INFO);
+            $this->log($inputHeaders, LogLevel::INFO);
+            $this->log($outputHeaders, LogLevel::INFO);
         }
         return parent::__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
     }
