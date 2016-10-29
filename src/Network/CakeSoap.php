@@ -16,10 +16,9 @@
 namespace CakeSoap\Network;
 
 use Cake\Core\Configure;
+use Cake\Core\Exception\Exception;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
-use Cake\Network\Request;
-use Cake\Network\Response;
 use CakeSoap\Network\SoapClient;
 use SoapFault;
 
@@ -31,6 +30,14 @@ class CakeSoap
 
     use InstanceConfigTrait;
     use LogTrait;
+
+    /**
+     * Log Error
+     *
+     * @var bool
+     */
+    public $logErrors = false;
+
 
     /**
      * SoapClient instance
@@ -65,11 +72,27 @@ class CakeSoap
     /**
      * Constructor
      *
+     * ### Options:
+     *
+     * - `debug` boolean - Do you want to see debug info? Default is false
+     * - `logErrors` boolean - Do you want to log errors? Default is false
+     *
      * @param array $config An array defining the configuration settings
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], array $options = [])
     {
         $this->config($config);
+
+        if (!isset($options['debug'])) {
+            $this->debug = Configure::read('debug');
+        }
+        if (isset($options['debug']) && $options['debug'] === true) {
+            $this->debug = true;
+        }
+        if (isset($options['logErrors']) && $options['logErrors'] === true) {
+            $this->logErrors = true;
+        }
+
         $this->connect();
     }
 
@@ -81,9 +104,7 @@ class CakeSoap
     protected function _parseConfig()
     {
         if (!class_exists('SoapClient')) {
-            $this->error = 'Class SoapClient not found, please enable Soap extensions';
-            $this->showError();
-            return false;
+            $this->handleError('Class SoapClient not found, please enable Soap extensions');
         }
 
         $opts = [
@@ -94,7 +115,7 @@ class CakeSoap
 
         $context = stream_context_create($opts);
         $options = [
-            'trace' => Configure::read('debug'),
+            'trace' => $this->debug,
             'stream_context' => $context,
             'cache_wsdl' => WSDL_CACHE_NONE
         ];
@@ -123,9 +144,9 @@ class CakeSoap
         try {
             $this->client = new SoapClient($this->config('wsdl'), $options);
         } catch (SoapFault $fault) {
-            $this->error = $fault->faultstring;
-            $this->showError();
+            $this->handleError($fault->faultstring);
         }
+
         if ($this->client) {
             $this->connected = true;
         }
@@ -163,17 +184,13 @@ class CakeSoap
      */
     public function sendRequest($action, $data)
     {
-        $this->error = false;
         if (!$this->connected) {
             $this->connect();
         }
-
         try {
             $result = $this->client->__soapCall($action, $data);
         } catch (SoapFault $fault) {
-            $this->error = $fault->faultstring;
-            $this->showError();
-            return false;
+            $this->handleError($fault->faultstring);
         }
         return $result;
     }
@@ -204,17 +221,14 @@ class CakeSoap
      * @param string $result A SOAP result
      * @return void
      */
-    public function showError($result = null)
+    public function handleError($error = null)
     {
-        $this->log($this->client->__getLastRequest());
-
-        if (Configure::read('debug') === true) {
-            if ($this->error) {
-                trigger_error('<span style="color:Red;text-align:left"><b>SOAP Error:</b> ' . $this->error . '</span>', E_USER_WARNING);
-            }
-            if (!empty($result)) {
-                echo sprintf("<p><b>Result:</b> %s </p>", $result);
+        if ($this->logErrors === true) {
+            $this->log($error);
+            if ($this->client) {
+                $this->log($this->client->__getLastRequest());
             }
         }
+        throw new Exception($error);
     }
 }
