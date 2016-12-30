@@ -46,6 +46,7 @@ class SoapClient extends Client
             $this->log($action, LogLevel::INFO);
             $this->log($version, LogLevel::INFO);
         }
+
         return parent::__doRequest($request, $location, $action, $version, $oneWay);
     }
 
@@ -68,6 +69,7 @@ class SoapClient extends Client
             $this->log($inputHeaders, LogLevel::INFO);
             $this->log($outputHeaders, LogLevel::INFO);
         }
+
         return parent::__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
     }
 }
