@@ -96,7 +96,7 @@ class CakeSoap
         }
 
         if (!isset($options['options'])) {
-            $options['options'];
+            $options['options'] = [];
         }
 
         $this->connect($options['options']);
