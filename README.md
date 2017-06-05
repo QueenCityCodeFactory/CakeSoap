@@ -1,7 +1,7 @@
 # CakeSoap
 
 ## Requirements
-* CakePHP 3.x
+* CakePHP 3.1+
 
 ## Installation
 
@@ -17,7 +17,7 @@ You can also add `"queencitycodefactory/cakesoap" : "dev-master"` to `require` s
 
 -- or --
 
-You can also add `"queencitycodefactory/cakesoap" : "~3.2"` to `require` section in your application's `composer.json`. Stable Release.
+You can also add `"queencitycodefactory/cakesoap" : "~3.3"` to `require` section in your application's `composer.json`. Stable Release.
 
 ## Usage
 
@@ -41,4 +41,3 @@ Include the CakeSoap library files:
         ]
     ]);
 ```
-

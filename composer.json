@@ -21,7 +21,7 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "cakephp/cakephp": ">=3.2.0"
+        "cakephp/cakephp": ">=3.1.0"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "dev-master",
