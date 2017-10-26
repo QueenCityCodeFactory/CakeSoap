@@ -139,6 +139,9 @@ class CakeSoap
             $config['password'] = $this->config('password');
             $config['authentication'] = $this->config('authentication');
         }
+        if (!empty($this->config('soap_version'))) {
+            $config['soap_version'] = $this->config('soap_version');
+        }
 
         return $config;
     }
