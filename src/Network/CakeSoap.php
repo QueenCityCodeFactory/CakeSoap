@@ -83,7 +83,7 @@ class CakeSoap
      */
     public function __construct(array $config = [], array $options = [])
     {
-        $this->config($config);
+        $this->setConfig($config);
 
         if (!isset($options['debug'])) {
             $this->debug = Configure::read('debug');
@@ -116,7 +116,7 @@ class CakeSoap
 
         $opts = [
             'http' => [
-                'user_agent' => $this->config('userAgent')
+                'user_agent' => $this->getConfig('userAgent')
             ]
         ];
 
@@ -128,19 +128,19 @@ class CakeSoap
             'stream_context' => $context,
             'cache_wsdl' => WSDL_CACHE_NONE
         ];
-        if (!empty($this->config('location'))) {
-            $config['location'] = $this->config('location');
+        if (!empty($this->getConfig('location'))) {
+            $config['location'] = $this->getConfig('location');
         }
-        if (!empty($this->config('uri'))) {
-            $config['uri'] = $this->config('uri');
+        if (!empty($this->getConfig('uri'))) {
+            $config['uri'] = $this->getConfig('uri');
         }
-        if (!empty($this->config('login'))) {
-            $config['login'] = $this->config('login');
-            $config['password'] = $this->config('password');
-            $config['authentication'] = $this->config('authentication');
+        if (!empty($this->getConfig('login'))) {
+            $config['login'] = $this->getConfig('login');
+            $config['password'] = $this->getConfig('password');
+            $config['authentication'] = $this->getConfig('authentication');
         }
-        if (!empty($this->config('soap_version'))) {
-            $config['soap_version'] = $this->config('soap_version');
+        if (!empty($this->getConfig('soap_version'))) {
+            $config['soap_version'] = $this->getConfig('soap_version');
         }
 
         return $config;
@@ -156,7 +156,7 @@ class CakeSoap
     {
         $config = $this->_parseConfig($options);
         try {
-            $this->client = new SoapClient($this->config('wsdl'), $config);
+            $this->client = new SoapClient($this->getConfig('wsdl'), $config);
         } catch (SoapFault $fault) {
             $this->handleError($fault->faultstring);
         }
