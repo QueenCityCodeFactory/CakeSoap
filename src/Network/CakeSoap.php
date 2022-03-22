@@ -27,7 +27,6 @@ use SoapFault;
  */
 class CakeSoap
 {
-
     use InstanceConfigTrait;
     use LogTrait;
 
@@ -37,7 +36,6 @@ class CakeSoap
      * @var bool
      */
     public $logErrors = false;
-
 
     /**
      * SoapClient instance
@@ -66,7 +64,7 @@ class CakeSoap
         'login' => '',
         'password' => '',
         'authentication' => 'SOAP_AUTHENTICATION_`IC',
-        'trace' => false
+        'trace' => false,
     ];
 
     /**
@@ -116,8 +114,8 @@ class CakeSoap
 
         $opts = [
             'http' => [
-                'user_agent' => $this->getConfig('userAgent')
-            ]
+                'user_agent' => $this->getConfig('userAgent'),
+            ],
         ];
 
         $opts += $options;
@@ -126,7 +124,7 @@ class CakeSoap
         $config = [
             'trace' => $this->debug,
             'stream_context' => $context,
-            'cache_wsdl' => WSDL_CACHE_NONE
+            'cache_wsdl' => WSDL_CACHE_NONE,
         ];
         if (!empty($this->getConfig('location'))) {
             $config['location'] = $this->getConfig('location');

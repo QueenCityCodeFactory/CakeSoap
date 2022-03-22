@@ -25,7 +25,6 @@ use SoapClient as Client;
  */
 class SoapClient extends Client
 {
-
     use LogTrait;
 
     /**
