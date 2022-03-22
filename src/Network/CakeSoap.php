@@ -63,7 +63,7 @@ class CakeSoap
         'uri' => '',
         'login' => '',
         'password' => '',
-        'authentication' => 'SOAP_AUTHENTICATION_`IC',
+        'authentication' => '',
         'trace' => false,
     ];
 
@@ -112,33 +112,51 @@ class CakeSoap
             $this->handleError('Class SoapClient not found, please enable Soap extensions');
         }
 
-        $opts = [
-            'http' => [
-                'user_agent' => $this->getConfig('userAgent'),
-            ],
-        ];
+        $config = $this->getConfig();
+        unset($config['wsdl']);
+
+        if (!isset($config['trace'])) {
+            $config['trace'] = $this->debug;
+        }
+
+        $opts = [];
+        if (!empty($config['userAgent']) && empty($options['http'])) {
+            $opts['http']['user_agent'] = $this->getConfig('userAgent');
+        }
+        unset($config['userAgent']);
 
         $opts += $options;
 
-        $context = stream_context_create($opts);
-        $config = [
-            'trace' => $this->debug,
-            'stream_context' => $context,
-            'cache_wsdl' => WSDL_CACHE_NONE,
-        ];
-        if (!empty($this->getConfig('location'))) {
-            $config['location'] = $this->getConfig('location');
+        if (!empty($opts)) {
+            $config['stream_context'] = stream_context_create($opts);
         }
-        if (!empty($this->getConfig('uri'))) {
-            $config['uri'] = $this->getConfig('uri');
+
+        if (!isset($config['cache_wsdl'])) {
+            $config['cache_wsdl'] = WSDL_CACHE_NONE;
         }
-        if (!empty($this->getConfig('login'))) {
-            $config['login'] = $this->getConfig('login');
-            $config['password'] = $this->getConfig('password');
-            $config['authentication'] = $this->getConfig('authentication');
+
+        if (empty($config['location'])) {
+            unset($config['location']);
         }
-        if (!empty($this->getConfig('soap_version'))) {
-            $config['soap_version'] = $this->getConfig('soap_version');
+
+        if (empty($config['uri'])) {
+            unset($config['uri']);
+        }
+
+        if (empty($config['login'])) {
+            unset($config['login']);
+        }
+
+        if (empty($config['password'])) {
+            unset($config['password']);
+        }
+
+        if (empty($config['authentication'])) {
+            unset($config['authentication']);
+        }
+
+        if (empty($config['authentication']) && !empty($config['login'])) {
+            $config['authentication'] = 'SOAP_AUTHENTICATION_`IC';
         }
 
         return $config;
