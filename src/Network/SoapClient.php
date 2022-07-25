@@ -63,10 +63,10 @@ class SoapClient extends Client
     {
         if (Configure::read('debug') === true) {
             $this->log($functionName, LogLevel::INFO);
-            $this->log($arguments, LogLevel::INFO);
-            $this->log($options, LogLevel::INFO);
-            $this->log($inputHeaders, LogLevel::INFO);
-            $this->log($outputHeaders, LogLevel::INFO);
+            $this->log(print_r($arguments, true), LogLevel::INFO);
+            $this->log(print_r($options, true), LogLevel::INFO);
+            $this->log(print_r($inputHeaders, true), LogLevel::INFO);
+            $this->log(print_r($outputHeaders, true), LogLevel::INFO);
         }
 
         return parent::__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
