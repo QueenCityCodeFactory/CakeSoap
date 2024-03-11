@@ -20,7 +20,7 @@
         "issues":"https://github.com/QueenCityCodeFactory/CakeSoap/issues"
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=8.0",
         "cakephp/cakephp": ">=3.1.0"
     },
     "require-dev": {

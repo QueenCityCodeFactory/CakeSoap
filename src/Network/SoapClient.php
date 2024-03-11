@@ -19,6 +19,7 @@ use Cake\Core\Configure;
 use Cake\Log\LogTrait;
 use Psr\Log\LogLevel;
 use SoapClient as Client;
+use SoapHeader;
 
 /**
  * SoapClient Override
@@ -33,11 +34,12 @@ class SoapClient extends Client
      * @param string $request The XML SOAP request.
      * @param string $location The URL to request.
      * @param string $action The SOAP action.
-     * @param int  $version The SOAP version.
-     * @param int $oneWay If set to 1, this method returns nothing. Use this where a response is not expected.
-     * @return string The XML SOAP response.
+     * @param int $version The SOAP version.
+     * @param bool $oneWay If set to true, this method returns nothing. Use this where a response is not expected.
+     *
+     * @return string|null The XML SOAP response.
      */
-    public function __doRequest($request, $location, $action, $version, $oneWay = 0)
+    public function __doRequest(string $request, string $location, string $action, int $version, bool $oneWay = false): ?string
     {
         if (Configure::read('debug') === true) {
             $this->log($request, LogLevel::INFO);
@@ -54,19 +56,21 @@ class SoapClient extends Client
      *
      * @param string $functionName The name of the SOAP function to call.
      * @param array $arguments An array of the arguments to pass to the function.
-     * @param array $options An associative array of options to pass to the client.
-     * @param array $inputHeaders An array of headers to be sent along with the SOAP request.
-     * @param array $outputHeaders If supplied, this array will be filled with the headers from the SOAP response.
+     * @param array|null $options An associative array of options to pass to the client.
+     * @param \SoapHeader|array|null $inputHeaders An array of headers to be sent along with the SOAP request.
+     * @param array|null $outputHeaders If supplied, this array will be filled with the headers from the SOAP response.
+     *
      * @return mixed
+     * @throws \SoapFault
      */
-    public function __soapCall($functionName, $arguments, $options = null, $inputHeaders = null, &$outputHeaders = null)
+    public function __soapCall(string $functionName, array $arguments, ?array $options = null, $inputHeaders = null, &$outputHeaders = null): mixed
     {
         if (Configure::read('debug') === true) {
             $this->log($functionName, LogLevel::INFO);
-            $this->log($arguments, LogLevel::INFO);
-            $this->log($options, LogLevel::INFO);
-            $this->log($inputHeaders, LogLevel::INFO);
-            $this->log($outputHeaders, LogLevel::INFO);
+            $this->log(print_r($arguments, true), LogLevel::INFO);
+            $this->log(print_r($options, true), LogLevel::INFO);
+            $this->log(print_r($inputHeaders, true), LogLevel::INFO);
+            $this->log(print_r($outputHeaders, true), LogLevel::INFO);
         }
 
         return parent::__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
