@@ -63,7 +63,7 @@ class SoapClient extends Client
      * @return mixed
      * @throws \SoapFault
      */
-    public function __soapCall(string $functionName, array $arguments, ?array $options = null, SoapHeader|array|null $inputHeaders = null, array &$outputHeaders = null): mixed
+    public function __soapCall(string $functionName, array $arguments, ?array $options = null, $inputHeaders = null, &$outputHeaders = null): mixed
     {
         if (Configure::read('debug') === true) {
             $this->log($functionName, LogLevel::INFO);
